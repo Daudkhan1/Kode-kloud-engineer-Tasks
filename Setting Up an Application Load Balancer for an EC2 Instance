@@ -1,0 +1,47 @@
+# Create a new security group
+aws ec2 create-security-group \
+  --group-name xfusion-sg \
+  --description "Security group for xfusion-alb " \
+  --vpc-id vpc-01c57a6cd66969c90
+
+# Note down the security group ID returned
+
+# Authorize inbound traffic on port 80 from anywhere (0.0.0.0/0)
+aws ec2 authorize-security-group-ingress \
+  --group-id sg-08c97dd4445cce3ff \
+  --protocol tcp \
+  --port 80 \
+  --cidr 0.0.0.0/0
+
+
+# Create a target group
+aws elbv2 create-target-group \
+  --name xfusion-tg \
+  --protocol HTTP \
+  --port 80 \
+  --vpc-id vpc-01c57a6cd66969c90
+# Note down the target group ARN returned
+
+
+# Create an ALB
+aws elbv2 create-load-balancer \
+  --name xfusion-alb \
+  --subnets subnet-01ad84c5be24e9139 subnet-08dae80b88ff9e927 subnet-07f91fa188e347346 \
+  --security-groups sg-08c97dd4445cce3ff
+# Note down the ALB ARN returned
+
+
+# Create a listener to forward traffic from port 80 to the target group
+aws elbv2 create-listener \
+  --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:730335277320:loadbalancer/app/xfusion-alb/ef0a477ce854cf21 \
+  --protocol HTTP \
+  --port 80 \
+  --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:730335277320:targetgroup/xfusion-tg/aa3b625b58a43651
+
+# Register the EC2 instance with the target group
+aws elbv2 register-targets \
+  --target-group-arn arn:aws:elasticloadbalancing:us-east-1:730335277320:targetgroup/xfusion-tg/aa3b625b58a43651 \
+  --targets Id=i-0329e9409239df97f
+
+# Replace 'datacenter-alb' with your actual ALB name if different
+aws elbv2 describe-load-balancers --names xfusion-alb --query 'LoadBalancers[0].DNSName' --output text
