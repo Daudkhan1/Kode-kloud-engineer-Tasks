@@ -1,0 +1,10 @@
+one bucket"devops-s3-4440" is by default exist on aws.
+
+1. Create the second S3 bucket (on which we will transfer all data from by default exist bucket "devops-s3-4440".
+aws s3 mb s3://devops-sync-7510
+
+2. Copy data from "devops-s3-4440" to new bucket "devops-sync-7510"
+aws s3 cp s3://devops-s3-4440/ s3://devops-sync-7510/ --recursive
+
+Using aws s3 sync (for large data sets)
+aws s3 sync s3://devops-s3-4440/ s3://devops-sync-7510/
