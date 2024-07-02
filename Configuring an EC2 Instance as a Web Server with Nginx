@@ -1,0 +1,8 @@
+Create a EC2 instance with key-pair ".pem"
+and in instance configuration put these commands
+#!/bin/bash
+apt-get install -y nginx
+systemctl start nginx
+systemctl enable nginx
+       OR
+we can ssh into the ec2 instance and run the above commands 
