@@ -1,0 +1,4 @@
+Create a role for executing lambda function and attach the “AWSLambdaBasicExecutionRole” policy for the that IAM role.
+Create a lambda function and attach that role to the function.
+Now go to the code source section and update your code according to your project .
+And create a test event and test the code if the code is successfully tested then we can deploy our code.
