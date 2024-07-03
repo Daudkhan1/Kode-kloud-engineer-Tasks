@@ -1,0 +1,4 @@
+Create a RDS 
+After creating and backing up create a snapshot of it.
+now go to that snapshot and click on action then click on the "Restore to RDS" option.
+Mention the anonther new RDS name (which is not created yet) and then restore the snapshot to that new RDS.
