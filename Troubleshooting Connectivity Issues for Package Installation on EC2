@@ -1,0 +1,14 @@
+The EC2 was not able to access the internet.
+so we configure the outbound traffic for that EC2 and configure these specification:
+Go to the security group's Outbound rule and edit the outbound rule.
+Type: All Traffic
+Protocol: ALL
+Port range: ALL
+Destination: Custom (0.0.0.0/0)
+
+
+and SAVE RULEs.
+
+the issue will be resolve.
+for verification we can ssh into the ec2 and now we can install the package.
+and the issue will be resolved.
