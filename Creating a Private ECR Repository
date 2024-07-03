@@ -1,0 +1,23 @@
+Step1: 
+First  of all Create ECR registry:
+aws ecr create-repository --repository-name nautilus-ecr --region us-east-1
+
+Step2:
+Create a image on aws-client
+docker build -t  my-image:latest
+
+Step3:
+Tag the docker image according to AWS ID:
+retrieve the aws ID = aws sts get-caller-identity --query Account --output text
+so the AWS ID =13123123
+Image tag commad:
+docker ecr <my image created on local> <AWS ID>.dkr.ecr.us-east-1.amazonaws.com/<ECR repo name with latest tag>
+docker tag my-image:latest 13123123. dkr.ecr.us-east-1.amazonaws.com/my-ecrrepo:latest
+
+Step4:
+Authenticate Docker to AWS ECR.
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS ID (13123123)>.dkr.ecr.us-east-1.amazonaws.com
+
+Step5:
+Now push that tagged docker image to ECR.
+docker push  13123123. dkr.ecr.us-east-1.amazonaws.com/my-ecrrepo:latest
