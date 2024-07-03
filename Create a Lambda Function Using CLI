@@ -1,0 +1,39 @@
+Step 1: Create file of python code on AWS client.
+
+# lambda_function.py
+
+def lambda_handler(event, context):
+    return {
+        'statusCode': 200,
+        'body': 'Welcome to KKE AWS Labs!'
+    }
+
+and convert the above lambda_function.py into zip file
+zip function.zip lambda_function.py
+
+Step 2: Create an IAM role for LAMBDA function.
+create my-policy.json file and mention it in below  command.
+aws iam create-role --role-name lambda_execution_role --assume-role-policy-document file://my-policy.json
+
+Step 3: Attach the policy named "AWSLambdaBasicExecutionRole" with the role "lambda_execution_role"
+# Attach basic Lambda execution policy to the role
+aws iam attach-role-policy --role-name lambda_execution_role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+Step 4: Create the Lambda Fucntion:
+# Create Lambda function
+aws lambda create-function \
+    --function-name datacenter-lambda-cli \
+    --runtime python3.8 \
+    --role arn:aws:iam::YOUR_ACCOUNT_ID:role/lambda_execution_role \
+    --handler lambda_function.lambda_handler \
+    --zip-file fileb://function.zip
+
+retreive the Account ID query = aws sts get-caller-identity --query Account --output text
+
+Step 5: test lambda function.
+# Invoke Lambda function with test event
+aws lambda invoke \
+    --function-name datacenter-lambda-cli \
+    --log-type Tail \
+    --payload '{}' \
+    output.txt
