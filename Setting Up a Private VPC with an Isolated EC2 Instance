@@ -1,0 +1,80 @@
+Step 1: Create a VPC
+  Open the Amazon VPC console.
+    In the left navigation pane, choose Your VPCs.
+    Choose Create VPC.
+    Under Resources to create, select VPC only.
+    Provide the following details:
+    Name tag: datacenter-pub-vpc
+    IPv4 CIDR block: 10.0.0.0/16
+    IPv6 CIDR block: No IPv6 CIDR Block
+    Tenancy: Default
+    Choose Create VPC.
+
+Step 2: Create a Subnet
+  In the left navigation pane, choose Subnets.
+    Choose Create Subnet.
+    Provide the following details:
+    Name tag: datacenter-pub-subnet
+    VPC: Select datacenter-pub-vpc
+    Availability Zone: Select an Availability Zone
+    IPv4 CIDR block: 10.0.1.0/24
+    Choose Create subnet.
+
+Step 3: Disable Auto-Assign Public IP on Subnet
+  In the left navigation pane, choose Subnets.
+    Select the subnet datacenter-pub-subnet.
+    Choose the Actions dropdown menu, and then not choose Modify auto-assign IP settings. (beacuse the ip is private)
+    Select Disable auto-assign public IPv4 address.
+    Choose Save.
+
+Step 4: Create an Internet Gateway
+  In the left navigation pane, choose Internet Gateways.
+    Choose Create Internet Gateway.
+    Provide the following details:
+    Name tag: datacenter-pub-igw
+    Choose Create internet gateway.
+    Select the internet gateway datacenter-pub-igw.
+    Choose Actions, and then choose Attach to VPC.
+    Select the VPC datacenter-pub-vpc, and then choose Attach internet gateway.
+
+Step 5: Update Route Table
+  In the left navigation pane, choose Route Tables.
+    Select the route table associated with datacenter-pub-vpc.
+    Choose the Routes tab, and then choose Edit routes.
+    Choose Add route.
+    Provide the following details:
+    Destination: 10.0.0.0/16
+    Target: Select Internet local 
+    Choose Save routes.
+
+Step 6: Create a Security Group
+  In the left navigation pane, choose Security Groups.
+    Choose Create security group.
+    Provide the following details:
+    Security group name: datacenter-pub-sg
+    Description: Allow SSH access
+    VPC: Select datacenter-pub-vpc
+    Choose Create security group.
+    Select the security group datacenter-pub-sg.
+    Choose the Inbound rules tab, and then choose Edit inbound rules.
+    Choose Add rule.
+    Provide the following details:
+      Type: All traffic
+      Protocol: ALL
+      Port range: ALL
+      Source: 10.0.0.0/24
+      Choose Save rules.
+
+Step 7: Launch an EC2 Instance
+  Open the Amazon EC2 console.
+    In the top right corner, choose the Launch instance button.
+    Provide the following details:
+    Name: datacenter-pub-ec2
+    AMI: Select an Amazon Linux 2 AMI (or any other AMI of your choice)
+    Instance type: Select t2.micro (or any other type of your choice)
+    Key pair: Select an existing key pair or create a new one
+    Network settings:
+    VPC: Select datacenter-pub-vpc
+    Subnet: Select datacenter-pub-subnet
+    Auto-assign public IP: Ensure it is Disable
+    Security group: Select datacenter-pub-sg
