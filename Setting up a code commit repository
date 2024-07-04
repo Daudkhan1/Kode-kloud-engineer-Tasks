@@ -1,0 +1,28 @@
+First we have to add codecommit repo on aws cosole.
+Or we can use this command 
+aws codecommit create-repository --repository-name <Name of the repo> --repository-description "Description of the repo">
+
+Add root user’s SSH public key from public key from the “aws client” to the IAM user.
+Upload the public id_rsa.pub key to the IAM user, we can use command on aws client or by console command for retrieve the key present on aws clinet.
+Cat /root / .ssh / id_rsa.pub
+
+command for upload the key from aws client to the IAM user .
+Aws iam upload-ssh-public-key –user-name <IAM user name>  --ssh-public-key-body “enter the key retrieve from this command “Cat /root / .ssh / id_rsa.pub”
+
+Create the “config” file on “/root/.ssh” location .
+Vi / root / .ssh / config 
+Host git-codecommit.*.amazonaws.com
+  User <User Id created after uploaded the key on IAM>
+  IdentityFile ~/ .ssh / id_rsa.pub
+
+Now cd / root
+git clone <ssh url present on the codecommit repo >
+enter to that cloned repo 
+create a file
+git status
+git add .
+Git config –global user.email “your email”
+git config –global user.name “myname”
+git commit -m “file added”
+git status 
+git push.
